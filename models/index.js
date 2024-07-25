@@ -1,11 +1,8 @@
-// models/index.js
 const { Sequelize, DataTypes } = require('sequelize');
 const dotenv = require('dotenv');
 
-
 dotenv.config();
 
-// Konfigurasi koneksi Sequelize
 const sequelize = new Sequelize('uas_dpsi', 'root', '', {
     host: 'localhost',
     dialect: 'mysql'
@@ -14,6 +11,10 @@ const sequelize = new Sequelize('uas_dpsi', 'root', '', {
 const User = require('./user')(sequelize);
 const Barang = require('./barang')(sequelize);
 const Laporan = require('./laporan')(sequelize);
+
+// Define associations
+Barang.hasMany(Laporan, { foreignKey: 'id_barang', as: 'laporan' });
+Laporan.belongsTo(Barang, { foreignKey: 'id_barang', as: 'barang' });
 
 sequelize.sync()
     .then(() => {
